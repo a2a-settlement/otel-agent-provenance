@@ -1,0 +1,69 @@
+groups:
+  - id: registry.agent.derivation
+    type: attribute_group
+    display_name: Agent Derivation Lineage Attributes
+    brief: >
+      Attributes for capturing the multi-agent dependency graph: which
+      agent outputs derived from which other agent outputs, with what
+      strategy and relative contribution. This is the layer absent from
+      both Google and Microsoft stacks today.
+    attributes:
+      - id: agent.derivation.input_spans
+        type: string[]
+        brief: >
+          Span IDs of the upstream outputs this agent consumed to produce
+          its output. Creates explicit causal links in the trace graph
+          beyond parent-child span relationships.
+        examples: [["span-abc-123", "span-def-456"]]
+        requirement_level:
+          conditionally_required: when the output derived from other agent outputs
+
+      - id: agent.derivation.input_agents
+        type: string[]
+        brief: >
+          Agent IDs that contributed input to this output. Parallel array
+          with input_spans when both are set.
+        examples: [["agent-researcher", "agent-analyst"]]
+        requirement_level:
+          conditionally_required: when the output derived from other agents
+
+      - id: agent.derivation.strategy
+        type:
+          allow_custom_values: true
+          members:
+            - id: synthesis
+              value: synthesis
+              brief: >
+                Output synthesizes multiple inputs into a new result.
+            - id: delegation
+              value: delegation
+              brief: >
+                Output was delegated to a sub-agent and returned as-is
+                or lightly edited.
+            - id: pipeline
+              value: pipeline
+              brief: >
+                Output is the result of a sequential pipeline where each
+                agent transforms the previous output.
+            - id: consensus
+              value: consensus
+              brief: >
+                Output was produced by aggregating or voting across
+                multiple agent outputs.
+            - id: review
+              value: review
+              brief: >
+                Output is a review, critique, or evaluation of another
+                agent's output.
+        brief: >
+          The strategy used to derive this output from its inputs.
+        requirement_level: recommended
+
+      - id: agent.derivation.weight
+        type: double[]
+        brief: >
+          Relative contribution weight of each input agent or span.
+          Parallel array with input_spans/input_agents. Values should
+          sum to 1.0 when normalised.
+        examples: [[0.6, 0.4]]
+        requirement_level: recommended

@@ -1,0 +1,86 @@
+groups:
+  - id: registry.agent.acceptance
+    type: attribute_group
+    display_name: Agent Task Acceptance Criteria Attributes
+    brief: >
+      Attributes for the acceptance criteria evaluation loop: did the
+      agent's output meet the task specification? This captures the
+      structured evaluation protocol absent from Microsoft's stack
+      (AutoGen, Semantic Kernel) and extends the basic
+      gen_ai.evaluation.* attributes with task-specific semantics.
+    attributes:
+      - id: agent.task.id
+        type: string
+        brief: Task or bounty identifier.
+        examples: ["task-research-gdp-2026", "bounty-001"]
+        requirement_level: required
+
+      - id: agent.task.acceptance_criteria
+        type: string
+        brief: >
+          Hash or URI of the acceptance specification. When a hash, this
+          is the SHA-256 of the canonical acceptance criteria document.
+          When a URI, it points to the specification.
+        examples:
+          - "sha256:a3f2b8c..."
+          - "https://tasks.example.com/specs/research-001"
+        requirement_level: recommended
+
+      - id: agent.task.acceptance_criteria.met
+        type: boolean
+        brief: Whether the output met the acceptance criteria.
+        requirement_level:
+          conditionally_required: when acceptance evaluation was performed
+
+      - id: agent.task.acceptance_criteria.score
+        type: double
+        brief: >
+          Acceptance evaluation score (0.0 to 1.0). More granular than
+          the boolean met/not-met; useful for partial credit and
+          confidence-gated auto-resolution.
+        examples: [0.92, 0.45, 1.0]
+        requirement_level: recommended
+
+      - id: agent.task.acceptance_criteria.strategy
+        type:
+          allow_custom_values: true
+          members:
+            - id: llm
+              value: llm
+              brief: Acceptance evaluated by an LLM judge.
+            - id: hash
+              value: hash
+              brief: Acceptance determined by content hash match.
+            - id: human
+              value: human
+              brief: Acceptance determined by human review.
+            - id: hybrid
+              value: hybrid
+              brief: >
+                Combination of strategies (e.g. LLM pre-screen with
+                human escalation).
+            - id: automated
+              value: automated
+              brief: Acceptance determined by automated tests or checks.
+        brief: Strategy used to evaluate acceptance criteria.
+        requirement_level: recommended
+
+      - id: agent.task.acceptance_criteria.evaluator
+        type: string
+        brief: >
+          Agent ID or identifier of the entity that performed the
+          acceptance evaluation. May be a mediator agent, a human
+          reviewer ID, or "self" for self-evaluation.
+        examples: ["mediator-agent-001", "human:reviewer@example.com", "self"]
+        requirement_level: recommended
+
+      - id: agent.task.acceptance_criteria.factors
+        type: string[]
+        brief: >
+          Evaluation factors considered during acceptance review.
+          Maps to the mediator's 7-factor evaluation framework.
+        examples:
+          - ["deliverable_completeness", "acceptance_criteria_specificity",
+             "dispute_substantiation", "reputation_history",
+             "proportionality", "provenance_attestation", "web_grounding"]
+        requirement_level: recommended

@@ -1,0 +1,4 @@
+# Base dependencies for OTel agent provenance
+opentelemetry-api
+opentelemetry-sdk
+pydantic
