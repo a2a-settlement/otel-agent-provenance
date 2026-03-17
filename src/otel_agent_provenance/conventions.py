@@ -144,6 +144,51 @@ class AcceptanceStrategy:
     AUTOMATED = "automated"
 
 
+class AttestationLifecycleAttributes:
+    """Attribute keys for attestation TTL, revocation, and renewal spans."""
+
+    ATTESTATION_ID = "agent.provenance.attestation.id"
+    ATTESTATION_TYPE = "agent.provenance.attestation.type"
+    ATTESTATION_ISSUED_AT = "agent.provenance.attestation.issued_at"
+    ATTESTATION_EXPIRES_AT = "agent.provenance.attestation.expires_at"
+    ATTESTATION_TTL_REMAINING_S = "agent.provenance.attestation.ttl_remaining_s"
+    ATTESTATION_REVOKED_AT = "agent.provenance.attestation.revoked_at"
+    ATTESTATION_REVOCATION_REASON = "agent.provenance.attestation.revocation_reason"
+    ATTESTATION_RENEWAL_CHAIN_DEPTH = "agent.provenance.attestation.renewal_chain_depth"
+    ATTESTATION_STATUS = "agent.provenance.attestation.status"
+    ATTESTATION_PARENT_ID = "agent.provenance.attestation.parent_id"
+    ATTESTATION_FEE_CHARGED = "agent.provenance.attestation.fee_charged"
+    ATTESTATION_EVENT = "agent.provenance.attestation.event"
+
+
+class AttestationEventType:
+    """Well-known values for ``agent.provenance.attestation.event``."""
+
+    ISSUED = "issued"
+    EXPIRED = "expired"
+    REVOKED = "revoked"
+    RENEWED = "renewed"
+    WARNING = "ttl_warning"
+
+
+class AttestationTypeSemconv:
+    """Well-known values for ``agent.provenance.attestation.type``."""
+
+    IDENTITY = "identity"
+    REPUTATION = "reputation"
+    TRANSACTION = "transaction"
+    CAPABILITY = "capability"
+
+
+class RevocationReason:
+    """Well-known values for ``agent.provenance.attestation.revocation_reason``."""
+
+    KEY_COMPROMISE = "key_compromise"
+    ERRONEOUS_ISSUANCE = "erroneous_issuance"
+    DEREGISTRATION = "deregistration"
+    POLICY_VIOLATION = "policy_violation"
+
+
 class EvidenceAttributes:
     """Attribute keys for dispute evidence submission spans."""
 

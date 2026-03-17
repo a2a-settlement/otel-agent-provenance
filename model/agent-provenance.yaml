@@ -241,3 +241,104 @@ groups:
         brief: Task or bounty ID of the original request at chain depth 0.
         examples: ["task-xyz-789", "bounty-2026-001"]
         requirement_level: recommended
+
+      # --- Attestation TTL & Lifecycle ---
+      - id: agent.provenance.attestation.id
+        type: string
+        brief: Unique identifier of the attestation record.
+        requirement_level: recommended
+
+      - id: agent.provenance.attestation.type
+        type:
+          allow_custom_values: false
+          members:
+            - id: identity
+              value: identity
+              brief: KYA identity verification attestation (365-day max TTL).
+            - id: reputation
+              value: reputation
+              brief: EMA reputation score attestation (90-day rolling window).
+            - id: transaction
+              value: transaction
+              brief: Settlement proof attestation (permanent, no TTL).
+            - id: capability
+              value: capability
+              brief: Agent capability attestation (180-day max TTL).
+        brief: The attestation category, governing TTL tier defaults.
+        requirement_level: recommended
+
+      - id: agent.provenance.attestation.issued_at
+        type: string
+        brief: RFC 3339 timestamp when the attestation was issued.
+        examples: ["2026-03-16T12:00:00Z"]
+        requirement_level: recommended
+
+      - id: agent.provenance.attestation.expires_at
+        type: string
+        brief: RFC 3339 timestamp when the attestation expires. Absent for permanent attestations.
+        examples: ["2027-03-16T12:00:00Z"]
+        requirement_level: recommended
+
+      - id: agent.provenance.attestation.ttl_remaining_s
+        type: double
+        brief: Seconds remaining until the attestation expires.
+        examples: [86400.0, 0.0]
+        requirement_level: recommended
+
+      - id: agent.provenance.attestation.revoked_at
+        type: string
+        brief: RFC 3339 timestamp when the attestation was revoked.
+        requirement_level: opt_in
+
+      - id: agent.provenance.attestation.revocation_reason
+        type:
+          allow_custom_values: false
+          members:
+            - id: key_compromise
+              value: key_compromise
+            - id: erroneous_issuance
+              value: erroneous_issuance
+            - id: deregistration
+              value: deregistration
+            - id: policy_violation
+              value: policy_violation
+        brief: Reason for attestation revocation.
+        requirement_level: opt_in
+
+      - id: agent.provenance.attestation.renewal_chain_depth
+        type: int
+        brief: How many times this attestation lineage has been renewed.
+        examples: [0, 3, 12]
+        requirement_level: opt_in
+
+      - id: agent.provenance.attestation.status
+        type:
+          allow_custom_values: false
+          members:
+            - id: active
+              value: active
+            - id: expired
+              value: expired
+            - id: revoked
+              value: revoked
+            - id: renewed
+              value: renewed
+        brief: Current lifecycle status of the attestation.
+        requirement_level: recommended
+
+      - id: agent.provenance.attestation.event
+        type:
+          allow_custom_values: false
+          members:
+            - id: issued
+              value: issued
+            - id: expired
+              value: expired
+            - id: revoked
+              value: revoked
+            - id: renewed
+              value: renewed
+            - id: ttl_warning
+              value: ttl_warning
+        brief: The lifecycle event captured by this span.
+        requirement_level: required

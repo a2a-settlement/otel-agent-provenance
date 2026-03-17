@@ -23,13 +23,15 @@ Usage::
 from __future__ import annotations
 
 import contextlib
-from typing import Any, Sequence
+from collections.abc import Sequence
+from typing import Any
 
 from opentelemetry import trace
 from opentelemetry.trace import Span, StatusCode, Tracer
 
 from otel_agent_provenance.conventions import (
     AcceptanceAttributes,
+    AttestationLifecycleAttributes,
     DerivationAttributes,
     ProvenanceAttributes,
 )
@@ -340,3 +342,91 @@ class AcceptanceSpan:
         _set_if(span, AcceptanceAttributes.ACCEPTANCE_SCORE, score)
         _set_if(span, AcceptanceAttributes.ACCEPTANCE_STRATEGY, strategy)
         _set_if(span, AcceptanceAttributes.ACCEPTANCE_EVALUATOR, evaluator)
+
+
+class AttestationLifecycleSpan:
+    """Context manager for attestation lifecycle events (issuance, revocation, renewal, expiry)."""
+
+    def __init__(
+        self,
+        tracer: Tracer | None = None,
+        *,
+        name: str = "agent.attestation.lifecycle",
+        attestation_id: str,
+        attestation_type: str,
+        event: str,
+        agent_id: str | None = None,
+        issued_at: str | None = None,
+        expires_at: str | None = None,
+        ttl_remaining_s: float | None = None,
+        revoked_at: str | None = None,
+        revocation_reason: str | None = None,
+        renewal_chain_depth: int | None = None,
+        parent_id: str | None = None,
+        fee_charged: int | None = None,
+        status: str | None = None,
+    ):
+        self._tracer = tracer or trace.get_tracer(_TRACER_NAME)
+        self._name = name
+        self._attrs: dict[str, Any] = {
+            AttestationLifecycleAttributes.ATTESTATION_ID: attestation_id,
+            AttestationLifecycleAttributes.ATTESTATION_TYPE: attestation_type,
+            AttestationLifecycleAttributes.ATTESTATION_EVENT: event,
+        }
+        _map = {
+            ProvenanceAttributes.AGENT_ID: agent_id,
+            AttestationLifecycleAttributes.ATTESTATION_ISSUED_AT: issued_at,
+            AttestationLifecycleAttributes.ATTESTATION_EXPIRES_AT: expires_at,
+            AttestationLifecycleAttributes.ATTESTATION_TTL_REMAINING_S: ttl_remaining_s,
+            AttestationLifecycleAttributes.ATTESTATION_REVOKED_AT: revoked_at,
+            AttestationLifecycleAttributes.ATTESTATION_REVOCATION_REASON: revocation_reason,
+            AttestationLifecycleAttributes.ATTESTATION_RENEWAL_CHAIN_DEPTH: renewal_chain_depth,
+            AttestationLifecycleAttributes.ATTESTATION_PARENT_ID: parent_id,
+            AttestationLifecycleAttributes.ATTESTATION_FEE_CHARGED: fee_charged,
+            AttestationLifecycleAttributes.ATTESTATION_STATUS: status,
+        }
+        for key, val in _map.items():
+            if val is not None:
+                self._attrs[key] = val
+        self._span: Span | None = None
+
+    def __enter__(self) -> AttestationLifecycleSpan:
+        self._span = self._tracer.start_span(self._name, attributes=self._attrs)
+        ctx = trace.set_span_in_context(self._span)
+        self._token = contextlib.suppress(Exception) and trace.context_api.attach(ctx)
+        return self
+
+    def __exit__(self, exc_type: type | None, exc_val: Exception | None, tb: Any) -> bool:
+        if self._span is not None:
+            if exc_type is not None:
+                self._span.set_status(StatusCode.ERROR, str(exc_val))
+                self._span.record_exception(exc_val)
+            else:
+                self._span.set_status(StatusCode.OK)
+            self._span.end()
+        if hasattr(self, "_token") and self._token:
+            with contextlib.suppress(Exception):
+                trace.context_api.detach(self._token)
+        return False
+
+    @property
+    def span(self) -> Span | None:
+        return self._span
+
+    @staticmethod
+    def enrich(
+        span: Span,
+        *,
+        attestation_id: str,
+        attestation_type: str,
+        event: str,
+        **kwargs: Any,
+    ) -> None:
+        """Set attestation lifecycle attributes on an existing span."""
+        span.set_attribute(AttestationLifecycleAttributes.ATTESTATION_ID, attestation_id)
+        span.set_attribute(AttestationLifecycleAttributes.ATTESTATION_TYPE, attestation_type)
+        span.set_attribute(AttestationLifecycleAttributes.ATTESTATION_EVENT, event)
+        for key, val in kwargs.items():
+            attr_key = getattr(AttestationLifecycleAttributes, f"ATTESTATION_{key.upper()}", None)
+            if attr_key and val is not None:
+                span.set_attribute(attr_key, val)
