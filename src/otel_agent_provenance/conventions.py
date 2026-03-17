@@ -213,3 +213,40 @@ class EvidenceType:
     SERVICE = "service"
     BOUNTY = "bounty"
     THIRD_PARTY_ATTESTATION = "third_party_attestation"
+
+
+class FederationAttributes:
+    """Attribute keys for federation events (peering, VC import, Trust Discount, health)."""
+
+    FEDERATION_PEER_DID = "agent.federation.peer_did"
+    FEDERATION_RHO = "agent.federation.rho"
+    FEDERATION_ALGORITHM_ID = "agent.federation.algorithm_id"
+    FEDERATION_HEALTH_STATUS = "agent.federation.health_status"
+    FEDERATION_ATTESTATION_TYPE = "agent.federation.attestation_type"
+    FEDERATION_SOURCE_EXCHANGE_DID = "agent.federation.source_exchange_did"
+
+    # Aliases for concise usage
+    PEER_DID = FEDERATION_PEER_DID
+    RHO = FEDERATION_RHO
+    ALGORITHM_ID = FEDERATION_ALGORITHM_ID
+    HEALTH_STATUS = FEDERATION_HEALTH_STATUS
+    ATTESTATION_TYPE = FEDERATION_ATTESTATION_TYPE
+    SOURCE_EXCHANGE_DID = FEDERATION_SOURCE_EXCHANGE_DID
+
+
+class FederationHealthStatus:
+    """Well-known values for ``agent.federation.health_status``."""
+
+    OPERATIONAL = "operational"
+    DEGRADED = "degraded"
+    UNAVAILABLE = "unavailable"
+    UNKNOWN = "unknown"
+
+
+class FederationAttestationType:
+    """Well-known values for ``agent.federation.attestation_type``."""
+
+    IDENTITY = "identity"
+    REPUTATION = "reputation"
+    TRANSACTION = "transaction"
+    CAPABILITY = "capability"

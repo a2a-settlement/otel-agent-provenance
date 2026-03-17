@@ -1,0 +1,82 @@
+groups:
+  - id: registry.agent.federation
+    type: attribute_group
+    display_name: Agent Federation Attributes
+    brief: >
+      Attributes for federation events across exchanges: peering handshakes,
+      VC import, Trust Discount evaluation, and health checks. These are
+      exchange-agnostic provenance attributes for cross-exchange attestation
+      flows.
+    attributes:
+      - id: agent.federation.peer_did
+        type: string
+        brief: >
+          DID of the federation peer (initiator or responder) in a peering
+          handshake, or the issuer of an imported attestation.
+        examples: ["did:web:exchange.example.com", "did:key:z6Mk..."]
+        requirement_level: recommended
+
+      - id: agent.federation.rho
+        type: double
+        brief: >
+          Trust discount factor (ρ) applied to cross-exchange attestations.
+          Values 0.0–1.0; 1.0 = full parity, lower values discount attestations
+          from less-trusted peers.
+        examples: [0.15, 0.5, 1.0]
+        requirement_level: recommended
+
+      - id: agent.federation.algorithm_id
+        type: string
+        brief: >
+          Identifier of the Trust Discount algorithm used to compute or
+          update rho (e.g. linear-volume-weighted).
+        examples: ["urn:a2a:trust:discount:linear-volume-weighted-v1"]
+        requirement_level: recommended
+
+      - id: agent.federation.health_status
+        type:
+          allow_custom_values: true
+          members:
+            - id: operational
+              value: operational
+              brief: Peer is healthy and reachable.
+            - id: degraded
+              value: degraded
+              brief: Peer is reachable but with degraded performance.
+            - id: unavailable
+              value: unavailable
+              brief: Peer is unreachable or failing health checks.
+            - id: unknown
+              value: unknown
+              brief: Health status has not been determined.
+        brief: Result of the most recent federation health check.
+        requirement_level: recommended
+
+      - id: agent.federation.attestation_type
+        type:
+          allow_custom_values: true
+          members:
+            - id: identity
+              value: identity
+              brief: KYA identity verification attestation.
+            - id: reputation
+              value: reputation
+              brief: EMA reputation score attestation.
+            - id: transaction
+              value: transaction
+              brief: Settlement proof attestation.
+            - id: capability
+              value: capability
+              brief: Agent capability attestation.
+        brief: >
+          Type of attestation being imported or evaluated. Exchange-agnostic
+          provenance category.
+        requirement_level: recommended
+
+      - id: agent.federation.source_exchange_did
+        type: string
+        brief: >
+          DID of the exchange that issued the attestation (for imported VCs)
+          or the source exchange in a cross-exchange flow.
+        examples: ["did:web:exchange.a2a-settlement.org"]
+        requirement_level: recommended
