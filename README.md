@@ -339,12 +339,18 @@ We use `agent.*` rather than `gen_ai.provenance.*` because these conventions app
 
 | Repository | Role |
 |-----------|------|
-| [a2a-settlement](https://github.com/a2a-settlement/a2a-settlement) | Settlement Exchange -- escrow, provenance verification, KYA identity |
-| [a2a-settlement-mediator](https://github.com/a2a-settlement/a2a-settlement-mediator) | AI Mediator -- 7-factor dispute resolution (reference for acceptance criteria) |
-| [adk-a2a-settlement](https://github.com/a2a-settlement/adk-a2a-settlement) | Google ADK integration (source for grounding adapter) |
+| [a2a-settlement](https://github.com/a2a-settlement/a2a-settlement) | Settlement Exchange — escrow, provenance verification, KYA identity |
 | [a2a-settlement-auth](https://github.com/a2a-settlement/a2a-settlement-auth) | OAuth + spending limits + SecretVault |
+| [a2a-settlement-mediator](https://github.com/a2a-settlement/a2a-settlement-mediator) | AI Mediator — 7-factor dispute resolution (reference for acceptance criteria) |
+| [a2a-settlement-dashboard](https://github.com/a2a-settlement/a2a-settlement-dashboard) | Human oversight dashboard |
 | [a2a-settlement-mcp](https://github.com/a2a-settlement/a2a-settlement-mcp) | MCP server for settlement operations |
+| [settlebridge-ai](https://github.com/a2a-settlement/settlebridge-ai) | SettleBridge Gateway — trust/policy enforcement |
 | [mcp-trust-gateway](https://github.com/a2a-settlement/mcp-trust-gateway) | MCP trust layer above OAuth |
+| [a2a-federation-rfc](https://github.com/a2a-settlement/a2a-federation-rfc) | Federation protocol specification |
+| [adk-a2a-settlement](https://github.com/a2a-settlement/adk-a2a-settlement) | Google ADK integration (source for grounding adapter) |
+| [langgraph-a2a-settlement](https://github.com/a2a-settlement/langgraph-a2a-settlement) | LangGraph integration |
+| [crewai-a2a-settlement](https://github.com/a2a-settlement/crewai-a2a-settlement) | CrewAI integration |
+| [litellm-a2a-settlement](https://github.com/a2a-settlement/litellm-a2a-settlement) | LiteLLM integration |
 
 ## License
 
