@@ -142,3 +142,29 @@ class AcceptanceStrategy:
     HUMAN = "human"
     HYBRID = "hybrid"
     AUTOMATED = "automated"
+
+
+class EvidenceAttributes:
+    """Attribute keys for dispute evidence submission spans."""
+
+    EVIDENCE_TYPE = "agent.evidence.type"
+    EVIDENCE_ARTIFACT_COUNT = "agent.evidence.artifact_count"
+    EVIDENCE_ENCRYPTED = "agent.evidence.encrypted"
+    EVIDENCE_ATTESTOR_ID = "agent.evidence.attestor_id"
+    EVIDENCE_CONTENT_HASH = "agent.evidence.content_hash"
+    EVIDENCE_ESCROW_ID = "agent.evidence.escrow_id"
+    EVIDENCE_SUBMITTER_ID = "agent.evidence.submitter_id"
+    EVIDENCE_WINDOW_EXPIRES_AT = "agent.evidence.window_expires_at"
+    EVIDENCE_DEFAULT_JUDGMENT = "agent.evidence.default_judgment"
+    EVIDENCE_STAKE_AMOUNT = "agent.evidence.stake_amount"
+    EVIDENCE_STAKE_RULING = "agent.evidence.stake_ruling"
+
+
+class EvidenceType:
+    """Well-known values for ``agent.evidence.type``."""
+
+    COMPUTE = "compute"
+    CONTENT = "content"
+    SERVICE = "service"
+    BOUNTY = "bounty"
+    THIRD_PARTY_ATTESTATION = "third_party_attestation"

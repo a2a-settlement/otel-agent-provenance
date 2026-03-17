@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "otel-agent-provenance"
-version = "0.1.0"
+version = "0.2.0"
 description = "OpenTelemetry semantic conventions and instrumentation for agent provenance, derivation lineage, and acceptance criteria evaluation."
 readme = "README.md"
 license = {text = "Apache-2.0"}
